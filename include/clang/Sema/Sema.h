@@ -2075,6 +2075,9 @@ public:
   AlwaysInlineAttr *mergeAlwaysInlineAttr(Decl *D, SourceRange Range,
                                           IdentifierInfo *Ident,
                                           unsigned AttrSpellingListIndex);
+  KernelAttr *mergeKernelAttr(Decl *D, SourceRange Range,
+                              IdentifierInfo *Ident,
+                              unsigned AttrSpellingListIndex);
   MinSizeAttr *mergeMinSizeAttr(Decl *D, SourceRange Range,
                                 unsigned AttrSpellingListIndex);
   OptimizeNoneAttr *mergeOptimizeNoneAttr(Decl *D, SourceRange Range,

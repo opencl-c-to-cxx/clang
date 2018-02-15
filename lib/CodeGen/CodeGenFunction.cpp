@@ -636,6 +636,9 @@ void CodeGenFunction::StartFunction(GlobalDecl GD,
         }
     } else if (!FD->hasAttr<AlwaysInlineAttr>())
       Fn->addFnAttr(llvm::Attribute::NoInline);
+
+	if (FD->hasAttr<KernelAttr>())
+      Fn->addFnAttr(llvm::Attribute::Kernel);
   }
 
   if (getLangOpts().OpenCL) {

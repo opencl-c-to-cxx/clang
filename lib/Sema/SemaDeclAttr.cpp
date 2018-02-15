@@ -3280,6 +3280,19 @@ AlwaysInlineAttr *Sema::mergeAlwaysInlineAttr(Decl *D, SourceRange Range,
                                           AttrSpellingListIndex);
 }
 
+KernelAttr *Sema::mergeKernelAttr(Decl *D, SourceRange Range,
+                                  IdentifierInfo *Ident,
+                                  unsigned AttrSpellingListIndex) {
+  if (!isa<FunctionDecl>(D))
+    return nullptr;
+
+  if (D->hasAttr<AlwaysInlineAttr>())
+    return nullptr;
+
+  return ::new (Context) KernelAttr(Range, Context, AttrSpellingListIndex);
+}
+
+
 MinSizeAttr *Sema::mergeMinSizeAttr(Decl *D, SourceRange Range,
                                     unsigned AttrSpellingListIndex) {
   if (OptimizeNoneAttr *Optnone = D->getAttr<OptimizeNoneAttr>()) {
@@ -3320,6 +3333,13 @@ static void handleAlwaysInlineAttr(Sema &S, Decl *D,
           D, Attr.getRange(), Attr.getName(),
           Attr.getAttributeSpellingListIndex()))
     D->addAttr(Inline);
+}
+
+static void handleKernelAttr(Sema &S, Decl *D, const AttributeList &Attr) {
+  if (KernelAttr *Kernel = S.mergeKernelAttr(
+          D, Attr.getRange(), Attr.getName(),
+          Attr.getAttributeSpellingListIndex()))
+    D->addAttr(Kernel);
 }
 
 static void handleMinSizeAttr(Sema &S, Decl *D, const AttributeList &Attr) {
@@ -4641,6 +4661,9 @@ static void ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D,
     break;
   case AttributeList::AT_AlwaysInline:
     handleAlwaysInlineAttr(S, D, Attr);
+    break;
+  case AttributeList::AT_Kernel:
+    handleKernelAttr(S, D, Attr);
     break;
   case AttributeList::AT_AnalyzerNoReturn:
     handleAnalyzerNoReturnAttr(S, D, Attr);

@@ -396,6 +396,12 @@ def AlwaysInline : InheritableAttr {
   let Documentation = [Undocumented];
 }
 
+def Kernel : InheritableAttr {
+  let Spellings = [GNU<"kernel">];
+  let Subjects = SubjectList<[Function]>;
+  let Documentation = [Undocumented];
+}
+
 def TLSModel : InheritableAttr {
   let Spellings = [GCC<"tls_model">];
   let Subjects = SubjectList<[TLSVar], ErrorDiag, "ExpectedTLSVar">;

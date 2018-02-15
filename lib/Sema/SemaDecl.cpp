@@ -2242,6 +2242,10 @@ static bool mergeDeclAttribute(Sema &S, NamedDecl *D,
     NewAttr = S.mergeAlwaysInlineAttr(D, AA->getRange(),
                                       &S.Context.Idents.get(AA->getSpelling()),
                                       AttrSpellingListIndex);
+  else if (const auto *KA = dyn_cast<KernelAttr>(Attr))
+    NewAttr = S.mergeKernelAttr(D, KA->getRange(),
+                                &S.Context.Idents.get(KA->getSpelling()),
+                                AttrSpellingListIndex);
   else if (const auto *MA = dyn_cast<MinSizeAttr>(Attr))
     NewAttr = S.mergeMinSizeAttr(D, MA->getRange(), AttrSpellingListIndex);
   else if (const auto *OA = dyn_cast<OptimizeNoneAttr>(Attr))
